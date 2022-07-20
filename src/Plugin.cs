@@ -102,7 +102,7 @@ namespace ValueTooltip
                 int value;
                 int price;
 
-                if (!item.isStackable || !plugin.CheckConfig(ConfigType.STACK) || item.isATool || item.isPowerTool)
+                if (!item.isStackable || !plugin.CheckConfig(ConfigType.STACK) || item.isATool || item.isPowerTool || item.hasFuel)
                 {
                     value = item.value;
                 }
