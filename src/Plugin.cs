@@ -20,7 +20,7 @@ namespace ValueTooltip
 
         private readonly Harmony harmony = new Harmony(PluginInfo.PLUGIN_GUID);
 
-        private static readonly bool AlreadyPatched = Harmony.GetPatchInfo((MethodBase)AccessTools.Method(typeof(Inventory), "fillHoverDescription", (Type[])null, (Type[])null)) != null;
+        //private static readonly bool AlreadyPatched = Harmony.GetPatchInfo((MethodBase)AccessTools.Method(typeof(Inventory), "fillHoverDescription", (Type[])null, (Type[])null)) != null;
 
         public enum DisplayType
         {

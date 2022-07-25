@@ -12,6 +12,8 @@
     <Company>OctrDev</Company>
     <Product>Value Tooltip</Product>
     <RootNamespace>ValueTooltip</RootNamespace>
+    <AssemblyVersion>1.1.0</AssemblyVersion>
+    <FileVersion>1.1.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

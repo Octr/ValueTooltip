@@ -45,7 +45,7 @@ namespace ValueTooltip.Patches
                 value = item.value * slot.stack;
             }
 
-            if(plugin.CheckConfig(Plugin.ConfigType.COMMERCE))
+            if(plugin.CheckConfig(Plugin.ConfigType.COMMERCE) && (plugin.CheckDisplay() != Plugin.DisplayType.BUY))
             {
                 value += Mathf.RoundToInt((float)value / 10f * (float)LicenceManager.manage.allLicences[8].getCurrentLevel());
             }
