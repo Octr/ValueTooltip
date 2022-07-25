@@ -2,6 +2,8 @@
 using BepInEx.Configuration;
 using UnityEngine;
 using HarmonyLib;
+using System.Reflection;
+using System;
 
 namespace ValueTooltip
 {
@@ -13,8 +15,12 @@ namespace ValueTooltip
         private readonly ConfigEntry<bool> _useColor;
         private readonly ConfigEntry<bool> _useStack;
         private readonly ConfigEntry<DisplayType> _displayType;
+        private readonly ConfigEntry<bool> _useCommerce;
+        private readonly ConfigEntry<KeyCode> _hotKey;
 
         private readonly Harmony harmony = new Harmony(PluginInfo.PLUGIN_GUID);
+
+        private static readonly bool AlreadyPatched = Harmony.GetPatchInfo((MethodBase)AccessTools.Method(typeof(Inventory), "fillHoverDescription", (Type[])null, (Type[])null)) != null;
 
         public enum DisplayType
         {
@@ -27,7 +33,8 @@ namespace ValueTooltip
         {
             ENABLED,
             COLOR,
-            STACK
+            STACK,
+            COMMERCE
         }
 
         public Plugin()
@@ -36,6 +43,8 @@ namespace ValueTooltip
             _useColor = Config.Bind("Options", "Color", true, "When true this will format the Value text to yellow.");
             _useStack = Config.Bind("Options", "Stack", true, "When true this will multiply the value of items by the item stack size.");
             _displayType = Config.Bind("Options", "Display", DisplayType.SELL, "Determines what type of information to display.");
+            _useCommerce = Config.Bind("Options", "Commerce", true, "When true this will calculate the value using commerce licence level");
+            _hotKey = Config.Bind<KeyCode>("General", "HotKey", KeyCode.LeftControl, "The Unity keybind that will toggle display of stack price. disable with KeyCode.None");
         }
 
         private void Awake()
@@ -52,6 +61,30 @@ namespace ValueTooltip
             Patch();
         }
 
+        void Update()
+        {
+            if(Inventory.inv.invOpen)
+            {
+                
+                if(Input.GetKeyDown(_hotKey.Value))
+                {
+                    ToggleHotkey();
+                }
+
+                if(Input.GetKeyUp(_hotKey.Value))
+                {
+                    ToggleHotkey();
+                }            
+
+            }
+        }
+
+        private void ToggleHotkey()
+        {
+            _useStack.Value = !_useStack.Value;
+            this.Config.Save();
+        }
+
         private void Patch()
         {
             harmony.PatchAll();
@@ -60,7 +93,7 @@ namespace ValueTooltip
             Logger.LogInfo($"Version: {PluginInfo.PLUGIN_VERSION}");
         }
 
-        bool CheckConfig(ConfigType configType)
+        public bool CheckConfig(ConfigType configType)
         {
             bool configValue;
 
@@ -75,6 +108,9 @@ namespace ValueTooltip
                 case ConfigType.STACK:
                     configValue = _useStack.Value;
                     break;
+                case ConfigType.COMMERCE:
+                    configValue =_useCommerce.Value;
+                    break;
                 default:
                     configValue = true;
                     break;
@@ -83,70 +119,13 @@ namespace ValueTooltip
             return configValue;
         }
 
-        DisplayType CheckDisplay()
+        public DisplayType CheckDisplay()
         {
             DisplayType displayType;
             displayType = _displayType.Value;
             return displayType;
         }
 
-        [HarmonyPatch(typeof(Inventory), "fillHoverDescription")]
-        class Tooltip_Patch
-        {
-            [HarmonyPostfix]
-            static void setDescriptionPatch(ref Inventory __instance, ref InventorySlot rollOverSlot)
-            {
-                Plugin plugin = Plugin.Instance;
-                InventoryItem item = rollOverSlot.itemInSlot;
-
-                int value;
-                int price;
-
-                if (!item.isStackable || !plugin.CheckConfig(ConfigType.STACK) || item.isATool || item.isPowerTool || item.hasFuel)
-                {
-                    value = item.value;
-                }
-                else
-                {
-                    value = item.value * rollOverSlot.stack;
-                }
-
-                price = value * 2;
-
-                if(plugin.CheckDisplay() == DisplayType.BUY)
-                {
-                    value = price;
-                }
-
-                string desc = item.getItemDescription(__instance.getInvItemId(item));
-
-                if (plugin.CheckDisplay() != DisplayType.BOTH)
-                {
-                    if (plugin.CheckConfig(ConfigType.COLOR))
-                    {
-                        __instance.InvDescriptionText.text = desc + $"\n{UIAnimationManager.manage.moneyAmountColorTag("<sprite=11>" + value.ToString("n0"))}";
-                    }
-                    else
-                    {
-                        __instance.InvDescriptionText.text = desc + $"\n <sprite=11>{value}";
-                    }
-                }
-                else
-                {
-                    if (plugin.CheckConfig(ConfigType.COLOR))
-                    {
-                        __instance.InvDescriptionText.text = desc + $"\n{UIAnimationManager.manage.moneyAmountColorTag(" [Buy] " + "<sprite=11>"  + price.ToString("n0"))}" +
-                            $"{UIAnimationManager.manage.moneyAmountColorTag(" [Sell] " +"<sprite=11>" + value.ToString("n0"))}";
-                    }
-                    else
-                    {
-                        __instance.InvDescriptionText.text = desc  +  $"\n" + " [Buy] " + "<sprite=11>" + price + " [Sell] " + $"<sprite=11>{value}";
-                    }
-                }
-
-                value = 0;
-            }
-
-        }
+   
     }
 }
