@@ -15,6 +15,7 @@ namespace ValueTooltip
         private readonly ConfigEntry<DisplayType> _displayType;
         private readonly ConfigEntry<bool> _useCommerce;
         private readonly ConfigEntry<KeyCode> _hotKey;
+        private readonly ConfigEntry<int> _nexusID;
 
         private readonly Harmony _harmony = new Harmony(PluginInfo.PLUGIN_GUID);
 
@@ -35,7 +36,7 @@ namespace ValueTooltip
             Commerce
         }
 
-        public Plugin()
+        public Plugin(ConfigEntry<int> nexusID)
         {
             _enabled = Config.Bind("Options", "Enabled", true, "You can disable the mod quickly by editing this value to false.");
             _useColor = Config.Bind("Options", "Color", true, "When true this will format the Value text to yellow.");
@@ -43,6 +44,7 @@ namespace ValueTooltip
             _displayType = Config.Bind("Options", "Display", DisplayType.Sell, "Determines what type of information to display.");
             _useCommerce = Config.Bind("Options", "Commerce", true, "When true this will calculate the value using commerce licence level");
             _hotKey = Config.Bind<KeyCode>("General", "HotKey", KeyCode.LeftControl, "The Unity key-bind that will toggle display of stack price. disable with KeyCode.None");
+            _nexusID = Config.Bind("TRTools", "NexusID", 1, "Don't alter this value as it is used by TRTools.");
         }
 
         private void Awake()
