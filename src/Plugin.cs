@@ -36,7 +36,7 @@ namespace ValueTooltip
             Commerce
         }
 
-        public Plugin(ConfigEntry<int> nexusID)
+        public Plugin()
         {
             _enabled = Config.Bind("Options", "Enabled", true, "You can disable the mod quickly by editing this value to false.");
             _useColor = Config.Bind("Options", "Color", true, "When true this will format the Value text to yellow.");
@@ -115,7 +115,8 @@ namespace ValueTooltip
                     configValue = true;
                     break;
             }
-
+            
+            Logger.LogInfo($"Checking {configType}.");
             return configValue;
         }
 
@@ -124,7 +125,6 @@ namespace ValueTooltip
             var displayType = _displayType.Value;
             return displayType;
         }
-
-   
+        
     }
 }
