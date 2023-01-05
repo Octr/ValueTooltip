@@ -19,7 +19,7 @@ namespace ValueTooltip.Patches
             int value = CalculateValues(rollOverSlot);
             int price = value * 2;
                        
-            if (plugin.CheckDisplay() == Plugin.DisplayType.BUY)
+            if (plugin.CheckDisplay() == Plugin.DisplayType.Buy)
             {
                 value = price;
             }
@@ -36,7 +36,7 @@ namespace ValueTooltip.Patches
             int value = 0;
             InventoryItem item = slot.itemInSlot;
 
-            if (!item.isStackable || !plugin.CheckConfig(Plugin.ConfigType.STACK) || item.isATool || item.isPowerTool || item.hasFuel)
+            if (!item.isStackable || !plugin.CheckConfig(Plugin.ConfigType.Stack) || item.isATool || item.isPowerTool || item.hasFuel)
             {
                 value = item.value;
             }
@@ -45,9 +45,9 @@ namespace ValueTooltip.Patches
                 value = item.value * slot.stack;
             }
 
-            if(plugin.CheckConfig(Plugin.ConfigType.COMMERCE) && (plugin.CheckDisplay() != Plugin.DisplayType.BUY))
+            if(plugin.CheckConfig(Plugin.ConfigType.Commerce) && (plugin.CheckDisplay() != Plugin.DisplayType.Buy))
             {
-                value += Mathf.RoundToInt((float)value / 10f * (float)LicenceManager.manage.allLicences[8].getCurrentLevel());
+                value += Mathf.RoundToInt((float) value / 20f * (float) LicenceManager.manage.allLicences[8].getCurrentLevel());
             }
 
             return value;
@@ -65,9 +65,9 @@ namespace ValueTooltip.Patches
             Plugin plugin = Plugin.Instance;
             string result;
 
-            if (plugin.CheckDisplay() != Plugin.DisplayType.BOTH)
+            if (plugin.CheckDisplay() != Plugin.DisplayType.Both)
             {
-                if((plugin.CheckConfig(Plugin.ConfigType.COLOR)))
+                if((plugin.CheckConfig(Plugin.ConfigType.Color)))
                 {
                     result = $"\n{UIAnimationManager.manage.moneyAmountColorTag("<sprite=11>" + value.ToString("n0"))}";
                 }
@@ -78,7 +78,7 @@ namespace ValueTooltip.Patches
             }
             else
             {
-                if (plugin.CheckConfig(Plugin.ConfigType.COLOR))
+                if (plugin.CheckConfig(Plugin.ConfigType.Color))
                 {
                     result = $"\n{UIAnimationManager.manage.moneyAmountColorTag(" [Buy] " + "<sprite=11>" + price.ToString("n0"))}" +
                         $"{UIAnimationManager.manage.moneyAmountColorTag(" [Sell] " + "<sprite=11>" + value.ToString("n0"))}";

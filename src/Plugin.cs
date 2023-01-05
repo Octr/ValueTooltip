@@ -2,8 +2,6 @@
 using BepInEx.Configuration;
 using UnityEngine;
 using HarmonyLib;
-using System.Reflection;
-using System;
 
 namespace ValueTooltip
 {
@@ -18,23 +16,23 @@ namespace ValueTooltip
         private readonly ConfigEntry<bool> _useCommerce;
         private readonly ConfigEntry<KeyCode> _hotKey;
 
-        private readonly Harmony harmony = new Harmony(PluginInfo.PLUGIN_GUID);
+        private readonly Harmony _harmony = new Harmony(PluginInfo.PLUGIN_GUID);
 
         //private static readonly bool AlreadyPatched = Harmony.GetPatchInfo((MethodBase)AccessTools.Method(typeof(Inventory), "fillHoverDescription", (Type[])null, (Type[])null)) != null;
 
         public enum DisplayType
         {
-            SELL,
-            BUY,
-            BOTH
+            Sell,
+            Buy,
+            Both
         }
 
         public enum ConfigType
         {
-            ENABLED,
-            COLOR,
-            STACK,
-            COMMERCE
+            Enabled,
+            Color,
+            Stack,
+            Commerce
         }
 
         public Plugin()
@@ -42,16 +40,16 @@ namespace ValueTooltip
             _enabled = Config.Bind("Options", "Enabled", true, "You can disable the mod quickly by editing this value to false.");
             _useColor = Config.Bind("Options", "Color", true, "When true this will format the Value text to yellow.");
             _useStack = Config.Bind("Options", "Stack", true, "When true this will multiply the value of items by the item stack size.");
-            _displayType = Config.Bind("Options", "Display", DisplayType.SELL, "Determines what type of information to display.");
+            _displayType = Config.Bind("Options", "Display", DisplayType.Sell, "Determines what type of information to display.");
             _useCommerce = Config.Bind("Options", "Commerce", true, "When true this will calculate the value using commerce licence level");
-            _hotKey = Config.Bind<KeyCode>("General", "HotKey", KeyCode.LeftControl, "The Unity keybind that will toggle display of stack price. disable with KeyCode.None");
+            _hotKey = Config.Bind<KeyCode>("General", "HotKey", KeyCode.LeftControl, "The Unity key-bind that will toggle display of stack price. disable with KeyCode.None");
         }
 
         private void Awake()
         {
             Instance = this;
 
-            if (!CheckConfig(ConfigType.ENABLED))
+            if (!CheckConfig(ConfigType.Enabled))
             {
                 Logger.LogInfo($"Mod: {PluginInfo.PLUGIN_NAME} is disabled!");
                 Logger.LogInfo("Enable it via the OctrDev.ValueTooltip.cfg file.");
@@ -87,7 +85,7 @@ namespace ValueTooltip
 
         private void Patch()
         {
-            harmony.PatchAll();
+            _harmony.PatchAll();
 
             Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} has loaded!");
             Logger.LogInfo($"Version: {PluginInfo.PLUGIN_VERSION}");
@@ -99,16 +97,16 @@ namespace ValueTooltip
 
             switch (configType)
             {
-                case ConfigType.ENABLED:
+                case ConfigType.Enabled:
                     configValue = _enabled.Value;
                     break;
-                case ConfigType.COLOR:
+                case ConfigType.Color:
                     configValue = _useColor.Value;
                     break;
-                case ConfigType.STACK:
+                case ConfigType.Stack:
                     configValue = _useStack.Value;
                     break;
-                case ConfigType.COMMERCE:
+                case ConfigType.Commerce:
                     configValue =_useCommerce.Value;
                     break;
                 default:
@@ -121,8 +119,7 @@ namespace ValueTooltip
 
         public DisplayType CheckDisplay()
         {
-            DisplayType displayType;
-            displayType = _displayType.Value;
+            var displayType = _displayType.Value;
             return displayType;
         }
 
