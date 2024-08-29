@@ -4,7 +4,7 @@
     <TargetFramework>net48</TargetFramework>
     <AssemblyName>Octr_ValueTooltip</AssemblyName>
     <Description>ValueTooltip</Description>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
     <PackageId>OctrDev.ValueTooltip</PackageId>
@@ -12,8 +12,8 @@
     <Company>OctrDev</Company>
     <Product>Value Tooltip</Product>
     <RootNamespace>ValueTooltip</RootNamespace>
-    <AssemblyVersion>1.1.0</AssemblyVersion>
-    <FileVersion>1.1.0</FileVersion>
+    <AssemblyVersion>1.2.0</AssemblyVersion>
+    <FileVersion>1.2.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
