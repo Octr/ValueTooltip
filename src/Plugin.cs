@@ -14,6 +14,7 @@ namespace ValueTooltip
         private readonly ConfigEntry<bool> _useStack;
         private readonly ConfigEntry<DisplayType> _displayType;
         private readonly ConfigEntry<bool> _useCommerce;
+        private readonly ConfigEntry<KeyCode> _hotKey;
         private readonly ConfigEntry<int> _nexusID;
 
         private readonly Harmony _harmony = new Harmony(PluginInfo.PLUGIN_GUID);
@@ -42,6 +43,7 @@ namespace ValueTooltip
             _useStack = Config.Bind("Options", "Stack", true, "When true this will multiply the value of items by the item stack size.");
             _displayType = Config.Bind("Options", "Display", DisplayType.Sell, "Determines what type of information to display.");
             _useCommerce = Config.Bind("Options", "Commerce", true, "When true this will calculate the value using commerce licence level");
+            _hotKey = Config.Bind<KeyCode>("General", "HotKey", KeyCode.LeftControl, "The Unity key-bind that will toggle display of stack price. disable with KeyCode.None");
             _nexusID = Config.Bind("TRTools", "NexusID", 1, "Don't alter this value as it is used by TRTools.");
         }
 
@@ -58,7 +60,31 @@ namespace ValueTooltip
 
             Patch();
         }
-        
+
+        void Update()
+        {
+            if (Inventory.Instance.invOpen)
+            {
+
+                if (Input.GetKeyDown(_hotKey.Value))
+                {
+                    ToggleHotkey();
+                }
+
+                if (Input.GetKeyUp(_hotKey.Value))
+                {
+                    ToggleHotkey();
+                }
+
+            }
+        }
+
+        private void ToggleHotkey()
+        {
+            _useStack.Value = !_useStack.Value;
+            this.Config.Save();
+        }
+
         private void Patch()
         {
             _harmony.PatchAll();
