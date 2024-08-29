@@ -20,7 +20,6 @@
     <PackageReference Include="BepInEx.Analyzers" Version="1.0.8" PrivateAssets="all" />
     <PackageReference Include="BepInEx.Unity" Version="6.0.0-*" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="1.1.0" />
-    <PackageReference Include="Dinkum.GameLibs" Version="2022.10.12-r.0" />
 	<PackageReference Include="UnityEngine.Modules" Version="2022.2.0-beta.2" IncludeAssets="compile" />
   </ItemGroup>
   
@@ -29,23 +28,20 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>..\libs\BepInEx\0Harmony.dll</HintPath>
-    </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\libs\Dinkum\Assembly-CSharp.dll</HintPath>
+      <HintPath>E:\SteamLibrary\steamapps\common\Dinkum\Dinkum_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="SemanticVersioning">
       <HintPath>..\libs\BepInEx\SemanticVersioning.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>..\libs\Dinkum\Unity.TextMeshPro.dll</HintPath>
+      <HintPath>E:\SteamLibrary\steamapps\common\Dinkum\Dinkum_Data\Managed\Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\libs\Dinkum\UnityEngine.dll</HintPath>
+      <HintPath>E:\SteamLibrary\steamapps\common\Dinkum\Dinkum_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\libs\Dinkum\UnityEngine.CoreModule.dll</HintPath>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>E:\SteamLibrary\steamapps\common\Dinkum\Dinkum_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
