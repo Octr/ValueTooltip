@@ -15,6 +15,7 @@ namespace ValueTooltip.Patches
             InventoryItem item = rollOverSlot.itemInSlot;
             string desc = GetDescription(item);
             int value = CalculateValues(rollOverSlot);
+            if (value == -1) return; // don't modify the description if the item is a deed or money
             int price = value * 2;
                        
             if (plugin.CheckDisplay() == Plugin.DisplayType.Buy)
@@ -34,7 +35,7 @@ namespace ValueTooltip.Patches
             int value = 0;
             InventoryItem item = slot.itemInSlot;
 
-            if (item.isDeed || item.getItemId() == Inventory.Instance.moneyItem.getItemId()) return 0;
+            if (item.isDeed || item.getItemId() == Inventory.Instance.moneyItem.getItemId()) return -1;
                 
             if (!item.isStackable || !plugin.CheckConfig(Plugin.ConfigType.Stack) || item.isATool || item.isPowerTool || item.hasFuel)
             {
