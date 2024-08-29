@@ -31,6 +31,7 @@ namespace ValueTooltip.Patches
         public static int CalculateValues(InventorySlot slot)
         {
             Plugin plugin = Plugin.Instance;
+            GiveNPC give = GiveNPC.give;
 
             int value = 0;
             InventoryItem item = slot.itemInSlot;
@@ -46,12 +47,37 @@ namespace ValueTooltip.Patches
                 value = item.value * slot.stack;
             }
 
-            if(item.relic)
+            if(!slot.isDisabledForGive() && give.giveWindowOpen)// Only multiply the value if the slot is unlocked
             {
-                value /= 4;
+                // Npc Specific Multipliers
+                switch (give.giveMenuTypeOpen)
+                {
+                    case GiveNPC.currentlyGivingTo.SellToBugComp:
+                    case GiveNPC.currentlyGivingTo.SellToFishingComp:
+                    case GiveNPC.currentlyGivingTo.SellToTuckshop:
+                        value = Mathf.RoundToInt((float)value * 2.5f);
+                        break;
+                    case GiveNPC.currentlyGivingTo.SellToTrapper:
+                        value = Mathf.RoundToInt((float)value * 2f);
+                        break;
+                    case GiveNPC.currentlyGivingTo.SellToJimmy:
+                        value = Mathf.RoundToInt((float)value * 1.5f);
+                        break;
+                    case GiveNPC.currentlyGivingTo.Tech:
+                        value = Mathf.RoundToInt((float)value * 6f);
+                        break;
+                    case GiveNPC.currentlyGivingTo.Sell:
+                        if (item.relic)
+                        {
+                            value /= 4;
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
-
-            if(plugin.CheckConfig(Plugin.ConfigType.Commerce) && (plugin.CheckDisplay() != Plugin.DisplayType.Buy))
+            
+            if (plugin.CheckConfig(Plugin.ConfigType.Commerce) && (plugin.CheckDisplay() != Plugin.DisplayType.Buy))
             {
                 value += Mathf.RoundToInt((float) value / 20f * (float) LicenceManager.manage.allLicences[8].getCurrentLevel());
             }
