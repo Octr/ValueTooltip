@@ -6,8 +6,6 @@ namespace ValueTooltip.Patches
     [HarmonyPatch(typeof(Inventory), "fillHoverDescription")]
     class CheckIfStackable
     {
-        Plugin plugin = Plugin.Instance;
-
         [HarmonyPostfix]
         [HarmonyPriority(1)]
         [HarmonyBefore("spicy.museumtooltip")]
@@ -36,6 +34,8 @@ namespace ValueTooltip.Patches
             int value = 0;
             InventoryItem item = slot.itemInSlot;
 
+            if (item.isDeed || item.getItemId() == Inventory.Instance.moneyItem.getItemId()) return 0;
+                
             if (!item.isStackable || !plugin.CheckConfig(Plugin.ConfigType.Stack) || item.isATool || item.isPowerTool || item.hasFuel)
             {
                 value = item.value;
@@ -43,6 +43,11 @@ namespace ValueTooltip.Patches
             else
             {
                 value = item.value * slot.stack;
+            }
+
+            if(item.relic)
+            {
+                value /= 4;
             }
 
             if(plugin.CheckConfig(Plugin.ConfigType.Commerce) && (plugin.CheckDisplay() != Plugin.DisplayType.Buy))
@@ -55,7 +60,7 @@ namespace ValueTooltip.Patches
 
         public static string GetDescription(InventoryItem item)
         {
-            Inventory inv = Inventory.inv;
+            Inventory inv = Inventory.Instance;
             string desc = item.getItemDescription(inv.getInvItemId(item));
             return desc;
         }
@@ -69,7 +74,7 @@ namespace ValueTooltip.Patches
             {
                 if((plugin.CheckConfig(Plugin.ConfigType.Color)))
                 {
-                    result = $"\n{UIAnimationManager.manage.moneyAmountColorTag("<sprite=11>" + value.ToString("n0"))}";
+                    result = $"\n{UIAnimationManager.manage.MoneyAmountColorTag("<sprite=11>" + value.ToString("n0"))}";
                 }
                 else
                 {
@@ -80,8 +85,8 @@ namespace ValueTooltip.Patches
             {
                 if (plugin.CheckConfig(Plugin.ConfigType.Color))
                 {
-                    result = $"\n{UIAnimationManager.manage.moneyAmountColorTag(" [Buy] " + "<sprite=11>" + price.ToString("n0"))}" +
-                        $"{UIAnimationManager.manage.moneyAmountColorTag(" [Sell] " + "<sprite=11>" + value.ToString("n0"))}";
+                    result = $"\n{UIAnimationManager.manage.MoneyAmountColorTag(" [Buy] " + "<sprite=11>" + price.ToString("n0"))}" +
+                        $"{UIAnimationManager.manage.MoneyAmountColorTag(" [Sell] " + "<sprite=11>" + value.ToString("n0"))}";
                 }
                 else
                 {
